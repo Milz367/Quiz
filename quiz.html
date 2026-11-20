@@ -1,0 +1,973 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Santa's Christmas Challenge</title>
+
+<style>
+
+/* =========================
+   MAIN WEBSITE DESIGN
+========================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: white;
+    background:
+        radial-gradient(ellipse at 50% 0%, #244d63 0%, transparent 55%),
+        radial-gradient(ellipse at 0% 100%, #123f34 0%, transparent 50%),
+        linear-gradient(135deg, #071523, #102b3b 55%, #081b29);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 20px 55px;
+}
+
+/* Aurora background */
+
+.aurora {
+    position: fixed;
+    width: 800px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.13;
+    pointer-events: none;
+    z-index: 0;
+    animation: auroraMove 12s ease-in-out infinite alternate;
+}
+
+.aurora.one {
+    background: #19d69b;
+    top: -250px;
+    left: -200px;
+}
+
+.aurora.two {
+    background: #3889d8;
+    bottom: -300px;
+    right: -200px;
+    animation-delay: 4s;
+}
+
+@keyframes auroraMove {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(100px, 70px) scale(1.3); }
+}
+
+/* =========================
+   SNOW
+========================= */
+
+#snow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.snowflake {
+    position: absolute;
+    top: -30px;
+    color: white;
+    opacity: 0.8;
+    text-shadow: 0 0 8px white;
+    animation: falling linear infinite;
+}
+
+@keyframes falling {
+    0% {
+        transform: translate3d(0, -20px, 0) rotate(0deg);
+        opacity: 0;
+    }
+    10% { opacity: 0.85; }
+    90% { opacity: 0.85; }
+    100% {
+        transform: translate3d(60px, 110vh, 0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* =========================
+   CHRISTMAS GARLAND
+========================= */
+
+.garland {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 85px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.garland svg {
+    width: 100%;
+    height: 85px;
+    overflow: visible;
+}
+
+.light-string {
+    fill: none;
+    stroke: #315b3d;
+    stroke-width: 5;
+}
+
+.light {
+    animation: lightGlow 1.5s infinite alternate;
+}
+
+.light:nth-child(4n+1) {
+    fill: #ff4545;
+    filter: drop-shadow(0 0 8px #ff4545);
+}
+
+.light:nth-child(4n+2) {
+    fill: #ffd65b;
+    filter: drop-shadow(0 0 8px #ffd65b);
+    animation-delay: 0.4s;
+}
+
+.light:nth-child(4n+3) {
+    fill: #55e9a0;
+    filter: drop-shadow(0 0 8px #55e9a0);
+    animation-delay: 0.8s;
+}
+
+.light:nth-child(4n) {
+    fill: #66baff;
+    filter: drop-shadow(0 0 8px #66baff);
+    animation-delay: 1.2s;
+}
+
+@keyframes lightGlow {
+    from { opacity: 0.45; }
+    to { opacity: 1; }
+}
+
+/* =========================
+   HANGING BAUBLES
+========================= */
+
+.bauble {
+    position: fixed;
+    top: 80px;
+    width: 34px;
+    height: 43px;
+    border-radius: 50%;
+    z-index: 4;
+    transform-origin: top center;
+    animation: baubleSwing 3s ease-in-out infinite alternate;
+    pointer-events: none;
+    box-shadow:
+        inset -7px -5px 12px rgba(0,0,0,0.4),
+        inset 5px 4px 8px rgba(255,255,255,0.35),
+        0 0 15px rgba(255,215,100,0.25);
+}
+
+.bauble::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 12px;
+    width: 10px;
+    height: 7px;
+    background: #d5b65d;
+    border-radius: 3px;
+}
+
+.bauble::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 85px;
+    background: #b9a16b;
+    bottom: 100%;
+    left: 16px;
+}
+
+@keyframes baubleSwing {
+    from { transform: rotate(-9deg); }
+    to { transform: rotate(9deg); }
+}
+
+/* =========================
+   FLYING SANTA
+========================= */
+
+.santa-flight {
+    position: fixed;
+    top: 100px;
+    left: -180px;
+    z-index: 6;
+    font-size: 45px;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: santaFly 28s linear infinite;
+}
+
+@keyframes santaFly {
+    0% { transform: translateX(-180px) translateY(0); }
+    20% { transform: translateX(30vw) translateY(20px); }
+    50% { transform: translateX(65vw) translateY(-15px); }
+    100% { transform: translateX(calc(100vw + 200px)) translateY(15px); }
+}
+
+/* =========================
+   MAIN QUIZ CARD
+========================= */
+
+.quiz-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 680px;
+    padding: 42px;
+    text-align: center;
+    border-radius: 25px;
+
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.14),
+        rgba(255,255,255,0.045)
+    );
+
+    border: 1px solid rgba(255,220,150,0.55);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.45),
+        inset 0 1px 1px rgba(255,255,255,0.15);
+
+    animation: cardAppear 1s ease;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Heading */
+
+.eyebrow {
+    color: #d7c69b;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-size: clamp(28px, 5vw, 39px);
+    color: #f5d68a;
+    margin-bottom: 12px;
+    text-shadow: 0 0 20px rgba(255,207,111,0.25);
+}
+
+.subtitle {
+    color: #d4e2e8;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+/* Decorative divider */
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 22px 0;
+    color: #e6c77d;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, transparent, #c6a75e);
+}
+
+.divider::after {
+    background: linear-gradient(90deg, #c6a75e, transparent);
+}
+
+/* Progress */
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    color: #f1d48c;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.progress-track {
+    height: 8px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.progress-fill {
+    width: 10%;
+    height: 100%;
+    background: linear-gradient(90deg, #d6ad45, #fff0ad);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 12px rgba(255,210,100,0.5);
+}
+
+/* Questions */
+
+#question {
+    font-size: 23px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    color: #ffffff;
+}
+
+.answers {
+    display: grid;
+    gap: 13px;
+}
+
+.answer-btn {
+    position: relative;
+    padding: 16px 20px;
+    border: 1px solid rgba(230,199,125,0.5);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.055);
+    color: white;
+    font-size: 16px;
+    cursor: inherit;
+    transition: all 0.25s ease;
+}
+
+.answer-btn:hover:not(:disabled) {
+    background: rgba(218,179,92,0.18);
+    border-color: #f2cf79;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.answer-btn:disabled {
+    opacity: 0.9;
+}
+
+.correct {
+    background: rgba(28,170,102,0.3);
+    border-color: #55e9a0;
+    color: #a9ffd0;
+}
+
+.incorrect {
+    background: rgba(220,65,65,0.25);
+    border-color: #ff7777;
+    color: #ffbaba;
+}
+
+/* Feedback */
+
+#feedback {
+    min-height: 28px;
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* Buttons */
+
+.main-btn {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #f5d68a, #c59a45);
+    color: #192a32;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: inherit;
+    transition: all 0.25s ease;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.2);
+    margin-top: 15px;
+}
+
+.main-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(220,180,90,0.35);
+}
+
+#nextBtn {
+    display: none;
+}
+
+/* Results */
+
+#resultArea {
+    animation: cardAppear 0.6s ease;
+}
+
+#result {
+    font-size: 48px;
+    font-weight: bold;
+    color: #f5d68a;
+    margin: 25px 0;
+}
+
+#resultMessage {
+    color: #e3e9eb;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* Homepage link */
+
+.home-link {
+    display: inline-block;
+    margin-top: 30px;
+    color: #d6c8a7;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.home-link:hover {
+    color: #ffe5a1;
+}
+
+/* Cursor */
+
+body {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='%23d6ad45' d='M14 28h5v-5h-5z'/%3E%3Cpath fill='%230b8f4b' stroke='%23065d32' d='M16 2L7 14h6L5 23h22l-8-9h6z'/%3E%3Ccircle cx='16' cy='4' r='2' fill='%23ffdb55'/%3E%3Ccircle cx='11' cy='16' r='1.5' fill='%23ff5555'/%3E%3Ccircle cx='21' cy='20' r='1.5' fill='%23ffdb55'/%3E%3C/svg%3E") 4 2, auto;
+}
+
+button, a {
+    cursor: inherit;
+}
+
+/* Sparkles */
+
+.cursor-sparkle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+    font-size: 18px;
+    animation: sparkle 850ms forwards;
+}
+
+@keyframes sparkle {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-35px) scale(0.2) rotate(180deg);
+    }
+}
+
+/* Mobile layout */
+
+@media(max-width: 600px) {
+    body {
+        padding: 130px 14px 35px;
+    }
+
+    .quiz-container {
+        padding: 27px 20px;
+    }
+
+    .bauble {
+        transform: scale(0.7);
+    }
+
+    .santa-flight {
+        top: 90px;
+        font-size: 30px;
+    }
+
+    #question {
+        font-size: 19px;
+    }
+}
+
+/* Accessibility */
+
+@media(prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND EFFECTS -->
+
+<div class="aurora one"></div>
+<div class="aurora two"></div>
+
+<div id="snow"></div>
+
+<!-- CHRISTMAS LIGHTS -->
+
+<div class="garland">
+<svg viewBox="0 0 1200 85" preserveAspectRatio="none">
+    <path class="light-string"
+    d="M0 5 Q150 95 300 5 T600 5 T900 5 T1200 5"/>
+
+    <g>
+        <circle class="light" cx="40" cy="30" r="7"/>
+        <circle class="light" cx="100" cy="48" r="7"/>
+        <circle class="light" cx="160" cy="53" r="7"/>
+        <circle class="light" cx="220" cy="45" r="7"/>
+        <circle class="light" cx="280" cy="25" r="7"/>
+        <circle class="light" cx="340" cy="12" r="7"/>
+        <circle class="light" cx="400" cy="24" r="7"/>
+        <circle class="light" cx="460" cy="45" r="7"/>
+        <circle class="light" cx="520" cy="53" r="7"/>
+        <circle class="light" cx="580" cy="45" r="7"/>
+        <circle class="light" cx="640" cy="25" r="7"/>
+        <circle class="light" cx="700" cy="12" r="7"/>
+        <circle class="light" cx="760" cy="24" r="7"/>
+        <circle class="light" cx="820" cy="45" r="7"/>
+        <circle class="light" cx="880" cy="53" r="7"/>
+        <circle class="light" cx="940" cy="45" r="7"/>
+        <circle class="light" cx="1000" cy="25" r="7"/>
+        <circle class="light" cx="1060" cy="12" r="7"/>
+        <circle class="light" cx="1120" cy="24" r="7"/>
+        <circle class="light" cx="1180" cy="35" r="7"/>
+    </g>
+</svg>
+</div>
+
+<!-- FLYING SANTA -->
+
+<div class="santa-flight">🛷 🎅 🦌 🦌</div>
+
+<!-- QUIZ -->
+
+<div class="quiz-container">
+
+    <div class="eyebrow">✦ The North Pole Presents ✦</div>
+
+    <h1>Santa's Christmas Challenge</h1>
+
+    <p class="subtitle">
+        🎄 How well do you know Christmas? 🎄
+    </p>
+
+    <div class="divider">❄</div>
+
+    <div id="quizArea">
+
+        <div class="progress-info">
+            <span id="progress">Question 1 of 10</span>
+            <span id="scoreDisplay">⭐ 0 Points</span>
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <h2 id="question"></h2>
+
+        <div class="answers" id="answers"></div>
+
+        <div id="feedback"></div>
+
+        <button class="main-btn" id="nextBtn"
+        onclick="nextQuestion()">
+            Next Question →
+        </button>
+
+    </div>
+
+    <div id="resultArea" style="display:none;">
+
+        <div style="font-size:55px;">🎅</div>
+
+        <h2>Christmas Challenge Complete!</h2>
+
+        <div class="divider">✨</div>
+
+        <div id="result"></div>
+
+        <p id="resultMessage"></p>
+
+        <button class="main-btn" onclick="restartQuiz()">
+            ↻ Play Again
+        </button>
+
+    </div>
+
+    <a href="test.html" class="home-link">
+        ← Return to Christmas Homepage
+    </a>
+
+</div>
+
+<script>
+
+/* =========================
+   QUIZ QUESTIONS
+========================= */
+
+const questions = [
+
+{
+    question: "What date is Christmas Day?",
+    answers: ["24th December", "25th December", "26th December", "31st December"],
+    correct: 1
+},
+
+{
+    question: "What colour is Rudolph's nose?",
+    answers: ["Blue", "Green", "Red", "Yellow"],
+    correct: 2
+},
+
+{
+    question: "Which country is credited with starting the Christmas tree tradition?",
+    answers: ["Germany", "France", "Spain", "Italy"],
+    correct: 0
+},
+
+{
+    question: "What does Santa traditionally travel in?",
+    answers: ["A sleigh", "A train", "A bus", "A boat"],
+    correct: 0
+},
+
+{
+    question: "How many reindeer are in the famous song, including Rudolph?",
+    answers: ["6", "7", "8", "9"],
+    correct: 3
+},
+
+{
+    question: "Which plant is traditionally associated with Christmas kissing?",
+    answers: ["Rose", "Mistletoe", "Sunflower", "Daisy"],
+    correct: 1
+},
+
+{
+    question: "What is traditionally placed at the top of a Christmas tree?",
+    answers: ["A star", "A stocking", "A bell", "A snowman"],
+    correct: 0
+},
+
+{
+    question: "What is the name of the snowman in the famous Christmas song?",
+    answers: ["Olaf", "Frosty", "Jack", "Snowy"],
+    correct: 1
+},
+
+{
+    question: "Which drink is traditionally associated with Christmas?",
+    answers: ["Lemonade", "Milkshake", "Eggnog", "Orange juice"],
+    correct: 2
+},
+
+{
+    question: "What do people traditionally hang by the fireplace for Santa?",
+    answers: ["Gloves", "Stockings", "Scarves", "Hats"],
+    correct: 1
+}
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+let answered = false;
+
+/* =========================
+   LOAD QUESTIONS
+========================= */
+
+function loadQuestion() {
+
+    answered = false;
+
+    const q = questions[currentQuestion];
+
+    document.getElementById("progress").textContent =
+        `Question ${currentQuestion + 1} of ${questions.length}`;
+
+    document.getElementById("scoreDisplay").textContent =
+        `⭐ ${score} Points`;
+
+    document.getElementById("progressFill").style.width =
+        ((currentQuestion + 1) / questions.length * 100) + "%";
+
+    document.getElementById("question").textContent = q.question;
+
+    document.getElementById("feedback").textContent = "";
+
+    document.getElementById("nextBtn").style.display = "none";
+
+    const answersDiv = document.getElementById("answers");
+
+    answersDiv.innerHTML = "";
+
+    q.answers.forEach((answer, index) => {
+
+        const button = document.createElement("button");
+
+        button.className = "answer-btn";
+
+        button.textContent = answer;
+
+        button.onclick = () => checkAnswer(index, button);
+
+        answersDiv.appendChild(button);
+
+    });
+
+}
+
+/* =========================
+   CHECK ANSWERS
+========================= */
+
+function checkAnswer(index, button) {
+
+    if (answered) return;
+
+    answered = true;
+
+    const q = questions[currentQuestion];
+
+    const buttons = document.querySelectorAll(".answer-btn");
+
+    buttons.forEach((btn, i) => {
+
+        btn.disabled = true;
+
+        if (i === q.correct) {
+            btn.classList.add("correct");
+        }
+
+    });
+
+    if (index === q.correct) {
+
+        score++;
+
+        document.getElementById("feedback").textContent =
+            "🎉 Correct! Santa is impressed!";
+
+    } else {
+
+        button.classList.add("incorrect");
+
+        document.getElementById("feedback").textContent =
+            "❄ Not quite! The answer was " + q.answers[q.correct];
+
+    }
+
+    document.getElementById("scoreDisplay").textContent =
+        `⭐ ${score} Points`;
+
+    document.getElementById("nextBtn").style.display = "inline-block";
+
+    document.getElementById("nextBtn").textContent =
+        currentQuestion === questions.length - 1
+        ? "See My Results →"
+        : "Next Question →";
+
+}
+
+/* =========================
+   NEXT QUESTION
+========================= */
+
+function nextQuestion() {
+
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+
+        loadQuestion();
+
+    } else {
+
+        showResults();
+
+    }
+
+}
+
+/* =========================
+   RESULTS
+========================= */
+
+function showResults() {
+
+    document.getElementById("quizArea").style.display = "none";
+
+    document.getElementById("resultArea").style.display = "block";
+
+    document.getElementById("result").textContent =
+        score + " / " + questions.length;
+
+    let message = "";
+
+    if (score === 10) {
+        message = "🏆 PERFECT SCORE! You're officially a Christmas legend!";
+    } else if (score >= 7) {
+        message = "🎄 Amazing work! You're one of Santa's top elves!";
+    } else if (score >= 4) {
+        message = "⭐ Good effort! There's still time to join Santa's team!";
+    } else {
+        message = "🎅 Looks like you need a little more Christmas practice!";
+    }
+
+    document.getElementById("resultMessage").textContent = message;
+
+}
+
+/* =========================
+   RESTART
+========================= */
+
+function restartQuiz() {
+
+    currentQuestion = 0;
+    score = 0;
+
+    document.getElementById("quizArea").style.display = "block";
+
+    document.getElementById("resultArea").style.display = "none";
+
+    loadQuestion();
+
+}
+
+/* =========================
+   GENERATE FALLING SNOW
+========================= */
+
+const snowContainer = document.getElementById("snow");
+
+for (let i = 0; i < 85; i++) {
+
+    const snowflake = document.createElement("div");
+
+    snowflake.className = "snowflake";
+
+    snowflake.textContent =
+        Math.random() > 0.5 ? "❄" : "❅";
+
+    snowflake.style.left = Math.random() * 100 + "%";
+
+    snowflake.style.fontSize =
+        (Math.random() * 13 + 8) + "px";
+
+    snowflake.style.animationDuration =
+        (Math.random() * 12 + 8) + "s";
+
+    snowflake.style.animationDelay =
+        -(Math.random() * 20) + "s";
+
+    snowContainer.appendChild(snowflake);
+
+}
+
+/* =========================
+   GENERATE BAUBLES
+========================= */
+
+const baubleColours = [
+    "#c73535",
+    "#d5ae48",
+    "#e8e8e8",
+    "#287c54",
+    "#497db4"
+];
+
+for (let i = 0; i < 8; i++) {
+
+    const bauble = document.createElement("div");
+
+    bauble.className = "bauble";
+
+    bauble.style.left = (5 + i * 13) + "%";
+
+    bauble.style.background = baubleColours[i % baubleColours.length];
+
+    bauble.style.animationDelay = Math.random() * 2 + "s";
+
+    bauble.style.animationDuration =
+        (2.5 + Math.random() * 2) + "s";
+
+    document.body.appendChild(bauble);
+
+}
+
+/* =========================
+   CURSOR SPARKLES
+========================= */
+
+const sparkleSymbols = ["✨", "❄", "⭐"];
+
+let lastSparkle = 0;
+
+document.addEventListener("mousemove", function(event) {
+
+    if (Date.now() - lastSparkle < 65) return;
+
+    lastSparkle = Date.now();
+
+    const sparkle = document.createElement("div");
+
+    sparkle.className = "cursor-sparkle";
+
+    sparkle.textContent =
+        sparkleSymbols[Math.floor(Math.random() * sparkleSymbols.length)];
+
+    sparkle.style.left = event.clientX + "px";
+
+    sparkle.style.top = event.clientY + "px";
+
+    document.body.appendChild(sparkle);
+
+    setTimeout(() => sparkle.remove(), 850);
+
+});
+
+/* START QUIZ */
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
